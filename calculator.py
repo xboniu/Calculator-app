@@ -1,22 +1,6 @@
 import tkinter as tk
 class Calculator:
 
-    def key_press(self, event):
-        # print(event.keysym)
-        # print(event.state)
-        if event.state == 8:
-            if event.keysym in '0123456789':
-                self.write_number(event.keysym)
-            elif event.keysum == 'asterisk':
-                self.operation()
-            elif event.keysym == 'minus':
-                self.operation()
-            elif event.keysym == 'equal':
-                self.equal()
-        elif event.state == 9 and event.keysym == 'plus':
-            self.operation()
-                
-        
     def __init__(self):
         self.root = tk.Tk()
         self.root.title('Calculator')
@@ -65,6 +49,23 @@ class Calculator:
         self.button_clear.grid(row=4, column=0)
 
         self.root.mainloop()
+
+    def key_press(self, event):
+        print(event.keysym)
+        print(event.state)
+        if event.state == 0:
+            if event.keysym in '0123456789':
+                self.write_number(event.keysym)
+            elif event.keysym == 'asterisk':
+                self.operation('x')
+            elif event.keysym == 'minus':
+                self.operation('-')
+            elif event.keysym == 'equal':
+                self.equal()
+        elif event.state == 1 and event.keysym == 'plus':
+            self.operation('+')
+        elif event.state == 1 and event.keysym == 'asterisk':
+            self.operation('x')
 
     def solve(self, num1, operator, num2):
         if operator == '+':
