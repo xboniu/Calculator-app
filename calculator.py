@@ -53,7 +53,7 @@ class Calculator:
     def key_press(self, event):
         print(event.keysym)
         print(event.state)
-        if event.state == 0:
+        if event.state == 0 or event.state == 8:
             if event.keysym in '0123456789':
                 self.write_number(event.keysym)
             elif event.keysym == 'asterisk':
@@ -62,6 +62,8 @@ class Calculator:
                 self.operation('-')
             elif event.keysym == 'equal':
                 self.equal()
+            elif event.keysym == 'plus':
+                self.operation('+')
         elif event.state == 1 and event.keysym == 'plus':
             self.operation('+')
         elif event.state == 1 and event.keysym == 'asterisk':
