@@ -156,5 +156,5 @@ class Calculator:
         self.last_equal = False
         self.display_function(self.operator, '0')
 
-
-Calculator()
+if __name__ == '__main__':
+    Calculator()
