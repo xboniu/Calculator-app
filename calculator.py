@@ -5,16 +5,21 @@ class Calculator:
         self.root = tk.Tk()
         self.root.title('Calculator')
         self.root.bind('<KeyPress>', self.key_press)
-        self.display = tk.Entry(self.root, width=25, borderwidth=5, font = ('Courier', 18))
+        
+        self.display = tk.Label(self.root, width=25, borderwidth=5, font = ('Courier', 18))
         self.display.grid(row=0, column=0, columnspan=4, padx = 10, pady = 10)
-        self.display.insert(tk.END, f'{0:>25}')
+        self.display.config(text = f'{0:>25}')
+        self.display.config(relief=tk.SUNKEN)
+
+        # this variables will store values of numbers and the operator in the current equation
         self.number1 = ''
         self.number2 = ''
         self.operator = ' '
+
+        # this variables check if last input was the clear button | not a number
         self.last_equal = False
-        self.MAX_NUM_LENGTH = 23
-        self.DISPLAY_LENGTH = 25
         self.last_not_num = False
+        
             # creating self.buttons
         self.button_1 = tk.Button(self.root, text = '1', padx = 40, pady = 20, command=lambda: self.write_number('1'))
         self.button_2 = tk.Button(self.root, text = '2', padx = 40, pady = 20, command=lambda: self.write_number('2'))
@@ -49,7 +54,7 @@ class Calculator:
         self.button_clear.grid(row=4, column=0)
 
         self.root.mainloop()
-
+    # defines what happens if keys like numbers or operators will be clicked on the keyboard
     def key_press(self, event):
         print(event.keysym)
         print(event.state)
@@ -68,7 +73,8 @@ class Calculator:
             self.operation('+')
         elif event.state == 1 and event.keysym == 'asterisk':
             self.operation('x')
-
+    # returns the solution of an equation between two numbers and an operator in a string
+    # if the output is longer than 23 then it erases everything as if you restarted the app
     def solve(self, num1, operator, num2):
         if operator == '+':
             output = str(int(num1)+int(num2))
@@ -81,41 +87,39 @@ class Calculator:
             return False
         return output
 
-
+    # displays the operator left-aligned and the number right aligned
     def display_function(self, operator, number):
-        self.display.delete(0, tk.END)
-        self.display.insert(tk.END, f'{operator} {number:>23}')
+        self.display.config(text = f'{operator} {number:>23}')
         
-
+    # executes when a number is clicked
     def write_number(self, num):
-        if self.display.get() == f'{0:>25}':
-            self.display.delete(0, tk.END)
+        if self.display.cget('text') == f'{0:>25}':
+            self.display.config(text = '')
         # checks if the prev input was an operator
         if self.last_not_num:
             self.display_function(self.operator, '')
             self.last_not_num = False
         if self.last_equal:
             self.display_function(' ', '')
-            self.number1 = ''
-            self.number2 = ''
-            self.operator = ' '
             self.last_equal = False
-        number = self.display.get()[1:].strip()
+        number = self.display.cget('text')[1:].strip()
         if len(number)==23:
             return
         number = number + num
         self.display_function(self.operator, number)
 
         
-
+    # executes when (+ or / or x) is clicked is clicked
     def operation(self, o):
+        # o is the operator inputted
         self.last_equal = False
         #
         # what if the display is empty
-        if self.display.get() == f'{0:>25}':
+        if self.display.cget('text') == f'{0:>25}':
             return
         # sets the number to what is in the display (besides the operator)
-        number = self.display.get()[1:].strip()
+        number = self.display.cget('text')[1:].strip()
+        # executes if no operator was used before (unless prev one was '=' - then it does execute)
         if self.number1 == '':
             self.number1 = number
             self.operator = o
@@ -133,11 +137,11 @@ class Calculator:
 
             
         
-
+    # executes when '=' is clicked
     def equal(self):
-        if self.display.get() == f'{0:>25}':
+        if self.display.cget('text') == f'{0:>25}':
             return
-        number = self.display.get()[1:].strip()
+        number = self.display.cget('text')[1:].strip()
         if self.number1 == '':
             return
         else:
@@ -150,7 +154,7 @@ class Calculator:
             self.last_equal = True
 
             
-
+    # executes when 'CLEAR' is clicked
     def clear(self):
         self.number1 = ''
         self.number2 = ''
